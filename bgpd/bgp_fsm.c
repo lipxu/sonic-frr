@@ -2608,6 +2608,32 @@ int bgp_event_update(struct peer *peer, enum bgp_fsm_events event)
 			   lookup_msg(bgp_status_msg, peer->status, NULL),
 			   lookup_msg(bgp_status_msg, next, NULL), peer->fd);
 
+
+
+	// if (bgp_debug_neighbor_events(peer))
+	flog_err(EC_BGP_FSM,
+			"##### %s [FSM] %s (%s->%s), fd %d, status %d->%d , event %d", peer->host,
+			bgp_event_str[event],
+			lookup_msg(bgp_status_msg, peer->status, NULL),
+			lookup_msg(bgp_status_msg, next, NULL), peer->fd, peer->status, next, event);
+
+	zlog_info("$$$$$ %s [FSM] %s (%s->%s), fd %d, status %d->%d , event %d", peer->host,
+			bgp_event_str[event],
+			lookup_msg(bgp_status_msg, peer->status, NULL),
+			lookup_msg(bgp_status_msg, next, NULL), peer->fd, peer->status, next, event);
+
+	if (bgp_debug_neighbor_events(peer))
+		zlog_info("&&&&& %s [FSM] event %d, status %d->%d, fd %d", peer->host,
+			   event, peer->status, next, peer->fd);
+
+	if (bgp_debug_neighbor_events(peer) && peer->status != next)
+		zlog_debug("%s [FSM] %s (%s->%s), fd %d", peer->host,
+			   bgp_event_str[event],
+			   lookup_msg(bgp_status_msg, peer->status, NULL),
+			   lookup_msg(bgp_status_msg, next, NULL), peer->fd);
+
+
+
 	peer->last_event = peer->cur_event;
 	peer->cur_event = event;
 
